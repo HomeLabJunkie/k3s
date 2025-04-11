@@ -1,5 +1,5 @@
 # Automated build of HA k3s Cluster with `kube-vip`, MetalLB Loadbalancer & Traefik Ingress
-# Longhorn Storage system and Rancher UI to Manage the cluster
+## Longhorn Storage system and Rancher UI to Manage the cluster
 
 I use Ansible playbooks to build an HA Kubernetes cluster with `k3s`, `kube-vip` and MetalLB, Then add Traefik and Longhorn via Helm
 
