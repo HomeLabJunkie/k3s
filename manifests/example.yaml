@@ -6,6 +6,6 @@ metadata:
   namespace: fleet-local
 spec:
   # Everything from this repo will be run in this cluster. You trust me right?
-  repo: "https://github.com/homelabjunkie/k3s/manifests"
+  repo: "https://github.com/homelabjunkie/k3s"
   paths:
   - single-cluster
