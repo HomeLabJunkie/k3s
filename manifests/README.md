@@ -12,5 +12,5 @@ metadata:
 spec:
   repo: https://github.com/rancher/fleet-examples
   paths:
-  - single-cluster/manifests
+  - manifestssingle-cluster
 ```
