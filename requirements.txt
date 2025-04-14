@@ -29,7 +29,7 @@ cfgv==3.4.0
     # via pre-commit
 charset-normalizer==3.3.2
     # via requests
-click==8.1.7
+click==8.1.8
     # via
     #   click-help-colors
     #   molecule
