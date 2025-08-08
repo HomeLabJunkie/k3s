@@ -83,7 +83,7 @@ netaddr==0.10.1
     # via -r requirements.in
 nodeenv==1.8.0
     # via pre-commit
-oauthlib==3.2.2
+oauthlib==3.3.1
     # via
     #   kubernetes
     #   requests-oauthlib
