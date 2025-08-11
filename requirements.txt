@@ -148,7 +148,7 @@ ruamel-yaml==0.18.14
     # via pre-commit-hooks
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
-six==1.16.0
+six==1.17.0
     # via
     #   kubernetes
     #   python-dateutil
