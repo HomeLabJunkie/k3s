@@ -59,7 +59,7 @@ jsonpatch==1.33
     # via -r requirements.in
 jsonpointer==2.4
     # via jsonpatch
-jsonschema==4.25.0
+jsonschema==4.25.1
     # via
     #   ansible-compat
     #   molecule
