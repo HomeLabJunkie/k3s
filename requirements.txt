@@ -67,7 +67,7 @@ jsonschema-specifications==2025.4.1
     # via jsonschema
 kubernetes==29.0.0
     # via -r requirements.in
-markdown-it-py==3.0.0
+markdown-it-py==4.0.0
     # via rich
 markupsafe==2.1.5
     # via jinja2
