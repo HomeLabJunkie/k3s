@@ -73,7 +73,7 @@ markupsafe==3.0.2
     # via jinja2
 mdurl==0.1.2
     # via markdown-it-py
-molecule==25.7.0
+molecule==25.9.0
     # via
     #   -r requirements.in
     #   molecule-plugins
