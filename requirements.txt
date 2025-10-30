@@ -47,7 +47,7 @@ google-auth==2.41.1
     # via kubernetes
 identify==2.6.15
     # via pre-commit
-idna==3.10
+idna==3.11
     # via requests
 jinja2==3.1.6
     # via
