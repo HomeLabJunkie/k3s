@@ -1,0 +1,186 @@
+adminRateLimitMaxBurst: "5"
+adminRateLimitSeconds: "300"
+adminToken:
+  existingSecret: ""
+  existingSecretKey: ""
+  value: $argon2id$v=19$m=19456,t=2,p=1$d1VOT05SMFI0TUxCbzlQODBoMDVhbjk0SDB6UUUvTFJDblcrdzcvdk1SZz0$oyNu55rhv13NIzJSoVul/oB8NtL9sPQtHH7wmeZTXmQ
+affinity: {}
+commonAnnotations: {}
+commonLabels: {}
+configMapAnnotations: {}
+database:
+  connectionRetries: 15
+  dbName: ""
+  existingSecret: ""
+  existingSecretKey: ""
+  host: ""
+  maxConnections: 10
+  password: ""
+  port: ""
+  type: default
+  uriOverride: ""
+  username: ""
+dnsConfig: {}
+domain: https://vaultwarden.jeffriffle.com
+duo:
+  existingSecret: ""
+  hostname: ""
+  iKey: ""
+  sKey:
+    existingSecretKey: ""
+    value: ""
+emailChangeAllowed: "true"
+emergencyAccessAllowed: "true"
+emergencyNotifReminderSched: 0 3 * * * *
+emergencyRqstTimeoutSched: 0 7 * * * *
+enableServiceLinks: true
+eventCleanupSched: 0 10 0 * * *
+eventsDayRetain: ""
+experimentalClientFeatureFlags: null
+extendedLogging: "true"
+fullnameOverride: ""
+hibpApiKey: ""
+iconBlacklistNonGlobalIps: "true"
+iconRedirectCode: "302"
+iconService: internal
+image:
+  extraSecrets: []
+  extraVars: []
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+  registry: docker.io
+  repository: vaultwarden/server
+  tag: 1.34.3-alpine
+ingress:
+  additionalAnnotations: {}
+  additionalHostnames: []
+  class: traefik
+  customHeadersConfigMap: {}
+  enabled: true
+  hostname: vaultwarden.jeffriffle.com
+  labels: {}
+  nginxAllowList: ""
+  nginxIngressAnnotations: true
+  path: /
+  pathType: Prefix
+  tls: true
+  tlsSecret: ""
+initContainers: []
+invitationExpirationHours: "120"
+invitationOrgName: SkyNetLabs
+invitationsAllowed: true
+ipHeader: X-Real-IP
+livenessProbe:
+  enabled: true
+  failureThreshold: 10
+  initialDelaySeconds: 5
+  path: /alive
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+logTimestampFormat: '%Y-%m-%d %H:%M:%S.%3f'
+logging:
+  logFile: ""
+  logLevel: ""
+nodeSelector: {}
+orgAttachmentLimit: ""
+orgCreationUsers: ""
+orgEventsEnabled: "false"
+orgGroupsEnabled: "false"
+podAnnotations: {}
+podDisruptionBudget:
+  enabled: false
+  maxUnavailable: null
+  minAvailable: 1
+podLabels: {}
+podSecurityContext: {}
+pushNotifications:
+  enabled: false
+  existingSecret: ""
+  identityUri: https://identity.bitwarden.com
+  installationId:
+    existingSecretKey: ""
+    value: ""
+  installationKey:
+    existingSecretKey: ""
+    value: ""
+  relayUri: https://push.bitwarden.com
+readinessProbe:
+  enabled: true
+  failureThreshold: 3
+  initialDelaySeconds: 5
+  path: /alive
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+replicas: 1
+requireDeviceEmail: "false"
+resourceType: ""
+resources: {}
+rocket:
+  address: 0.0.0.0
+  port: "8080"
+  workers: "10"
+securityContext: {}
+sendsAllowed: "true"
+service:
+  annotations: {}
+  ipFamilyPolicy: SingleStack
+  labels: {}
+  sessionAffinity: ""
+  sessionAffinityConfig: {}
+  type: ClusterIP
+serviceAccount:
+  create: true
+  name: vaultwarden-svc
+showPassHint: "false"
+sidecars: []
+signupDomains: ""
+signupsAllowed: true
+signupsVerify: "true"
+smtp:
+  acceptInvalidCerts: "false"
+  acceptInvalidHostnames: "false"
+  authMechanism: Plain
+  debug: false
+  existingSecret: ""
+  from: jeffriffle@gmail.com
+  fromName: Vaultwarden
+  host: smtp.gmail.com
+  password:
+    existingSecretKey: ""
+    value: fpnwjebqsremtmeq
+  port: 587
+  security: starttls
+  username:
+    existingSecretKey: ""
+    value: jeffriffle@gmail.com
+startupProbe:
+  enabled: false
+  failureThreshold: 10
+  initialDelaySeconds: 5
+  path: /alive
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+storage:
+  attachments: {}
+  data: {}
+  existingVolumeClaim:
+    attachmentsPath: /data/attachments
+    claimName: vaultwarden-data-pvc
+    dataPath: /data
+strategy: {}
+timeZone: America/Chicago
+tolerations: []
+trashAutoDeleteDays: ""
+userAttachmentLimit: ""
+userSendLimit: ""
+webVaultEnabled: "true"
+yubico:
+  clientId: "87641"
+  existingSecret: ""
+  secretKey:
+    existingSecretKey: ""
+    value: "8dt+uwg59TWqkY/RsM5sAKqcbpA="
+  server: ""
