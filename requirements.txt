@@ -6,7 +6,7 @@
 #
 ansible-compat==25.8.2
     # via molecule
-ansible-core==2.20.0
+ansible-core==2.20.2
     # via
     #   -r requirements.in
     #   ansible-compat
