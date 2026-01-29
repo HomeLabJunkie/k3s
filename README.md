@@ -3,7 +3,7 @@
 
 I use Ansible playbooks to build an HA Kubernetes cluster with `k3s`, `kube-vip` and MetalLB, Then add Traefik and Longhorn via Helm
 
-📄 [Documentation](https://technotim.live/posts/k3s-etcd-ansible/) (including example commands)
+📄 [Documentation](https://technotim.com/posts/k3s-etcd-ansible/) (including example commands)
 
 📺 [Watch the Video](https://www.youtube.com/watch?v=CbkEWcUZ7zM)
 

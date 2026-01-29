@@ -6,7 +6,7 @@
       ansible.builtin.assert:
         that: ansible_version.full is version_compare('2.11', '>=')
         msg: >
-          "Ansible is out of date. See here for more info: https://docs.technotim.live/posts/ansible-automation/"
+          "Ansible is out of date. See here for more info: https://docs.technotim.com/posts/ansible-automation/"
 
 - name: Prepare Proxmox cluster
   hosts: proxmox

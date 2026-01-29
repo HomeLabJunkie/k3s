@@ -1,5 +1,5 @@
 
-<!-- It's a good idea to check this post first for general troubleshooting https://github.com/techno-tim/k3s-ansible/discussions/19   -->
+<!-- It's a good idea to check this post first for general troubleshooting https://github.com/timothystewart6/k3s-ansible/discussions/19   -->
 
 <!--- Provide a general summary of the issue in the Title above -->
 
@@ -82,4 +82,4 @@ node
 ## Possible Solution
 <!--- Not obligatory, but suggest a fix/reason for the bug, -->
 
-- [ ] I've checked the [General Troubleshooting Guide](https://github.com/techno-tim/k3s-ansible/discussions/20)
+- [ ] I've checked the [General Troubleshooting Guide](https://github.com/timothystewart6/k3s-ansible/discussions/20)
