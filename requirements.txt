@@ -19,7 +19,7 @@ bracex==2.6
     # via wcmatch
 cachetools==6.2.6
     # via google-auth
-certifi==2025.10.5
+certifi==2025.11.12
     # via
     #   kubernetes
     #   requests
