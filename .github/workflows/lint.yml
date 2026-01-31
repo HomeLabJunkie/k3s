@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Check out the codebase
-        uses: actions/checkout@v5.0.1
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
@@ -45,7 +45,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5.0.1
+        uses: actions/checkout@v6.0.2
       - name: Ensure SHA pinned actions
         uses: zgosalvez/github-actions-ensure-sha-pinned-actions@v4.0.1
         with:
