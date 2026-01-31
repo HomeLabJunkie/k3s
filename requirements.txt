@@ -65,7 +65,7 @@ jsonschema==4.26.0
     #   molecule
 jsonschema-specifications==2025.9.1
     # via jsonschema
-kubernetes==34.1.0
+kubernetes==35.0.0
     # via -r requirements.in
 markdown-it-py==4.0.0
     # via rich
