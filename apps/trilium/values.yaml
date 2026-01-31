@@ -19,7 +19,7 @@ controllers:
         image:
           pullPolicy: IfNotPresent
           repository: triliumnext/trilium
-          tag: v0.99.4
+          tag: v0.101.3
 persistence:
   data:
     enabled: true
