@@ -50,7 +50,7 @@ image:
   pullSecrets: []
   registry: docker.io
   repository: vaultwarden/server
-  tag: 1.34.3-alpine
+  tag: 1.35.2-alpine
 ingress:
   additionalAnnotations: {}
   additionalHostnames: []
