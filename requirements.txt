@@ -134,7 +134,7 @@ requests-oauthlib==2.0.0
     # via kubernetes
 resolvelib==1.2.1
     # via ansible-core
-rich==14.3.1
+rich==14.3.2
     # via
     #   enrich
     #   molecule
