@@ -17,7 +17,7 @@ attrs==25.4.0
     #   referencing
 bracex==2.6
     # via wcmatch
-cachetools==6.2.6
+cachetools==7.0.0
     # via google-auth
 certifi==2026.1.4
     # via
