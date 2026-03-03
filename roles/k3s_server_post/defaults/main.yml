@@ -21,7 +21,7 @@ cilium_bgp_lb_cidr: 192.168.31.0/24
 cilium_hubble: true
 cilium_mode: native
 
-cluster_cidr: 10.52.0.0/16
+cluster_cidr: 10.42.0.0/16
 enable_bpf_masquerade: true
 kube_proxy_replacement: true
 group_name_master: master

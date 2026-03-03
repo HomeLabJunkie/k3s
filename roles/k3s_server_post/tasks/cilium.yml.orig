@@ -115,15 +115,6 @@
         msg: API endpoint {{ apiserver_endpoint }} is not reachable
       when: ping_result.rc != 0
 
-    - name: Wait for Kubernetes API server to be fully ready
-      ansible.builtin.command: >-
-        {{ k3s_kubectl_binary | default('k3s kubectl') }} get --raw /readyz
-      register: api_ready
-      until: api_ready.rc == 0 and api_ready.stdout == 'ok'
-      retries: 30
-      delay: 10
-      changed_when: false
-
     - name: Test for existing Cilium install
       ansible.builtin.command: |
         {{ k3s_kubectl_binary | default('k3s kubectl') }} -n kube-system get daemonsets cilium

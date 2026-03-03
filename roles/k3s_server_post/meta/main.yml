@@ -101,7 +101,7 @@ argument_specs:
 
       cluster_cidr:
         description: Inner-cluster IP range
-        default: 10.52.0.0/16
+        default: 10.42.0.0/16
 
       enable_bpf_masquerade:
         description: Use IP masquerading
