@@ -2,7 +2,7 @@
 *.log
 ansible.cfg
 kubeconfig
-
 # Ignore all app configurations (may contain secrets)
-apps/
-apps/
+apps/**
+!apps/trilium/
+!apps/trilium/values.yaml
