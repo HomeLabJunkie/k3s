@@ -70,7 +70,7 @@ extra_args: >-
 # the contents of the if block is also required if using calico or cilium
 extra_server_args: >-
   {{ extra_args }}
-  {{ '--node-taint node-role.kubernetes.io/master=true:NoSchedule' if k3s_master_taint else '' }}
+  {{ '--node-taint node-role.kubernetes.io/control-plane=true:NoSchedule' if k3s_master_taint else '' }}
   {% if calico_iface is defined or cilium_iface is defined %}
   --flannel-backend=none
   --disable-network-policy
