@@ -38,8 +38,8 @@ set -uo pipefail
 H=\$(hostname)
 
 echo "==> [\$H] stopping k3s services"
-sudo systemctl stop k3s k3s-agent 2>/dev/null || true
-sudo systemctl disable k3s k3s-agent 2>/dev/null || true
+sudo systemctl stop k3s k3s-agent k3s-node 2>/dev/null || true
+sudo systemctl disable k3s k3s-agent k3s-node 2>/dev/null || true
 
 echo "==> [\$H] killing residual processes"
 sudo pkill -9 -f 'k3s server|k3s agent|containerd-shim|kube-proxy|kubelet|cilium-agent|longhorn|flanneld' 2>/dev/null || true
@@ -52,11 +52,16 @@ done
 
 echo "==> [\$H] removing binaries and systemd units"
 sudo rm -f /usr/local/bin/k3s /usr/local/bin/kubectl /usr/local/bin/crictl /usr/local/bin/ctr
-sudo rm -f /etc/systemd/system/k3s.service /etc/systemd/system/k3s-agent.service
-sudo rm -f /etc/systemd/system/k3s.service.env /etc/systemd/system/k3s-agent.service.env
+sudo rm -f /etc/systemd/system/k3s.service /etc/systemd/system/k3s-agent.service /etc/systemd/system/k3s-node.service
+sudo rm -f /etc/systemd/system/k3s.service.env /etc/systemd/system/k3s-agent.service.env /etc/systemd/system/k3s-node.service.env
 sudo rm -f /etc/systemd/system/multi-user.target.wants/k3s.service
 sudo rm -f /etc/systemd/system/multi-user.target.wants/k3s-agent.service
+sudo rm -f /etc/systemd/system/multi-user.target.wants/k3s-node.service
+sudo rm -f /usr/local/lib/systemd/system/k3s.service /usr/local/lib/systemd/system/k3s-agent.service /usr/local/lib/systemd/system/k3s-node.service
+sudo rm -f /usr/local/lib/systemd/system/k3s.service.env /usr/local/lib/systemd/system/k3s-agent.service.env /usr/local/lib/systemd/system/k3s-node.service.env
+sudo rm -f /usr/lib/systemd/system/k3s.service /usr/lib/systemd/system/k3s-agent.service /usr/lib/systemd/system/k3s-node.service
 sudo systemctl daemon-reload
+sudo systemctl reset-failed 2>/dev/null || true
 
 echo "==> [\$H] removing data directories"
 sudo rm -rf /etc/rancher /var/lib/rancher
@@ -65,7 +70,7 @@ sudo rm -rf /etc/cni /opt/cni
 sudo rm -rf /run/k3s /run/flannel
 sudo rm -rf /sys/fs/bpf/tc /sys/fs/bpf/cilium
 for p in ${LONGHORN_PATHS[@]}; do
-  sudo rm -rf "\$p"/* 2>/dev/null || true
+  sudo rm -rf "\$p" 2>/dev/null || true
 done
 
 echo "==> [\$H] flushing iptables / ip6tables"
