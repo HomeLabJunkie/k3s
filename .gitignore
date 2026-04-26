@@ -1,8 +1,26 @@
+# Environment
 .env/
 *.log
 ansible.cfg
 kubeconfig
+
+# TLS certificates and keys
+*.pem
+*.key
+*.crt
+
 # Ignore all app configurations (may contain secrets)
 apps/**
 !apps/trilium/
 !apps/trilium/values.yaml
+
+# Active inventory (contains k3s_token and passwords)
+inventory/k3s-ansible/
+
+# Recovery/restore files (temporary, not needed)
+*-restore.yaml
+*-replicas.yaml
+
+# Origin cert files
+origin-cert.pem
+origin-key.pem
