@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: trilium-restore
+  namespace: trilium
+spec:
+  containers:
+  - name: restore
+    image: ubuntu:24.04
+    command: ["/bin/bash", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: cloned-trilium-data-pvc

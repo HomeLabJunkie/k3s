@@ -1,0 +1,33 @@
+defaultSettings:
+  defaultDataPath: /var/lib/storage
+  defaultReplicaCount: 3
+  storageMinimalAvailablePercentage: 10
+  nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+  defaultDataLocality: best-effort
+
+persistence:
+  defaultClass: true
+  defaultClassReplicaCount: 3
+
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  host: longhorn.jeffriffle.com
+  tls: true
+  tlsSecret: tls-longhorn
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+
+longhornManager:
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+
+longhornDriver:
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
