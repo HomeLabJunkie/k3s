@@ -57,7 +57,7 @@ jmespath==1.1.0
     # via -r requirements.in
 jsonpatch==1.33
     # via -r requirements.in
-jsonpointer==3.0.0
+jsonpointer==3.1.1
     # via jsonpatch
 jsonschema==4.26.0
     # via
