@@ -1,12 +1,15 @@
 #!/bin/bash
 set -e
 
-# load secrets
-if [ ! -f ~/k3s/.secrets ]; then
-  echo "ERROR: ~/k3s/.secrets not found. Create it with RANCHER_BOOTSTRAP_PASSWORD, RANCHER_ADMIN_PASSWORD, RANCHER_ADMIN_USER"
+# decrypt secrets
+if [ -f ~/k3s/.secrets.enc ]; then
+  eval $(sops --decrypt ~/k3s/.secrets.enc | sed 's/^/export /')
+elif [ -f ~/k3s/.secrets ]; then
+  source ~/k3s/.secrets
+else
+  echo "ERROR: No secrets file found"
   exit 1
 fi
-source ~/k3s/.secrets
 
 echo "==> Running Ansible playbook..."
 ansible-playbook -i inventory/k3s-ansible/hosts.ini site.yml "$@"
@@ -49,44 +52,70 @@ helm upgrade --install rancher rancher-latest/rancher \
   --set bootstrapPassword=${RANCHER_BOOTSTRAP_PASSWORD} \
   --wait --timeout=600s
 
-echo "==> Waiting for Rancher to be fully ready..."
-kubectl -n cattle-system rollout status deployment/rancher --timeout=300s
-sleep 30
+echo "==> Setting up Cloudflare secrets for cert-manager..."
+kubectl create secret generic cloudflare-api-token \
+  --from-literal=api-token=${CLOUDFLARE_API_TOKEN} \
+  --namespace cert-manager \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+echo "==> Creating ClusterIssuer..."
+kubectl apply -f ~/k3s/clusterissuer-letsencrypt.yaml
+
+echo "==> Deploying Cloudflare tunnel..."
+kubectl create namespace cloudflared --dry-run=client -o yaml | kubectl apply -f -
+kubectl create secret generic tunnel-token \
+  --from-literal=token=${CLOUDFLARE_TUNNEL_TOKEN} \
+  --namespace cloudflared \
+  --dry-run=client -o yaml | kubectl apply -f -
+kubectl apply -f ~/k3s/cloudflared.yaml
+kubectl -n cloudflared rollout status deployment/cloudflared --timeout=120s
 
 echo "==> Configuring Rancher admin credentials..."
-# get bootstrap token
-RANCHER_URL="https://rancher.jeffriffle.com"
+# use port-forward to reach Rancher internally (no external URL needed)
+kubectl port-forward -n cattle-system svc/rancher 8443:443 &>/dev/null &
+PF_PID=$!
+sleep 10
 
-LOGIN_TOKEN=$(curl -sk -X POST \
-  "${RANCHER_URL}/v3-public/localProviders/local?action=login" \
-  -H "Content-Type: application/json" \
-  -d "{\"username\":\"admin\",\"password\":\"${RANCHER_BOOTSTRAP_PASSWORD}\"}" \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+LOGIN_TOKEN=""
+for i in $(seq 1 20); do
+  LOGIN_TOKEN=$(curl -sk -X POST \
+    "https://localhost:8443/v3-public/localProviders/local?action=login" \
+    -H "Content-Type: application/json" \
+    -d "{\"username\":\"admin\",\"password\":\"${RANCHER_BOOTSTRAP_PASSWORD}\"}" \
+    2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('token',''))" 2>/dev/null || true)
+  if [ -n "$LOGIN_TOKEN" ]; then
+    echo "  Rancher API ready"
+    break
+  fi
+  echo "  waiting for Rancher API... ($i/20)"
+  sleep 15
+done
 
-if [ -z "$LOGIN_TOKEN" ]; then
-  echo "WARNING: Could not get Rancher login token - set admin password manually"
-else
-  # set permanent password
+if [ -n "$LOGIN_TOKEN" ]; then
   curl -sk -X POST \
-    "${RANCHER_URL}/v3/users?action=changepassword" \
+    "https://localhost:8443/v3/users?action=changepassword" \
     -H "Authorization: Bearer ${LOGIN_TOKEN}" \
     -H "Content-Type: application/json" \
-    -d "{\"currentPassword\":\"${RANCHER_BOOTSTRAP_PASSWORD}\",\"newPassword\":\"${RANCHER_ADMIN_PASSWORD}\"}"
+    -d "{\"currentPassword\":\"${RANCHER_BOOTSTRAP_PASSWORD}\",\"newPassword\":\"${RANCHER_ADMIN_PASSWORD}\"}" \
+    >/dev/null
 
-  # set server URL
   curl -sk -X PUT \
-    "${RANCHER_URL}/v3/settings/server-url" \
+    "https://localhost:8443/v3/settings/server-url" \
     -H "Authorization: Bearer ${LOGIN_TOKEN}" \
     -H "Content-Type: application/json" \
-    -d "{\"value\":\"${RANCHER_URL}\"}"
+    -d "{\"value\":\"https://rancher.jeffriffle.com\"}" \
+    >/dev/null
 
   echo "==> Rancher admin credentials configured"
+else
+  echo "WARNING: Could not configure Rancher credentials - do it manually"
 fi
+
+kill $PF_PID 2>/dev/null || true
 
 echo "==> Cluster status:"
 kubectl get nodes
-kubectl get pods -A | grep -v Running | grep -v Completed
-
 echo ""
-echo "==> Done! Rancher available at https://rancher.jeffriffle.com"
-echo "    Login: ${RANCHER_ADMIN_USER} / ${RANCHER_ADMIN_PASSWORD}"
+echo "==> Done!"
+echo "    Rancher: https://rancher.jeffriffle.com"
+echo "    Login:   ${RANCHER_ADMIN_USER} / ${RANCHER_ADMIN_PASSWORD}"
