@@ -24,3 +24,4 @@ inventory/k3s-ansible/
 # Origin cert files
 origin-cert.pem
 origin-key.pem
+.secrets
