@@ -38,6 +38,10 @@ helm upgrade --install traefik traefik/traefik \
   --values ~/k3s/traefik-values.yaml \
   --wait --timeout=300s
 
+echo "==> Deploying Traefik dashboard..."
+kubectl apply -f ~/k3s/traefik-dashboard.yaml
+kubectl apply -f ~/k3s/traefik-dashboard-cert.yaml
+
 echo "==> Installing Rancher..."
 helm repo add rancher-latest https://releases.rancher.com/server-charts/latest --force-update
 helm upgrade --install rancher rancher-latest/rancher \
@@ -116,6 +120,14 @@ else
 fi
 
 kill $PF_PID 2>/dev/null || true
+
+echo "==> Deploying ingress and certs..."
+kubectl apply -f ~/k3s/traefik-dashboard.yaml
+kubectl apply -f ~/k3s/traefik-dashboard-cert.yaml
+kubectl apply -f ~/k3s/website.yaml
+kubectl apply -f ~/k3s/vaultwarden-cert.yaml
+kubectl apply -f ~/k3s/trilium-cert.yaml
+kubectl apply -f ~/k3s/trilium-ingress.yaml
 
 echo "==> Cluster status:"
 kubectl get nodes
