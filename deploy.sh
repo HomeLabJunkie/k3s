@@ -71,18 +71,24 @@ kubectl apply -f ~/k3s/cloudflared.yaml
 kubectl -n cloudflared rollout status deployment/cloudflared --timeout=120s
 
 echo "==> Configuring Rancher admin credentials..."
-# use port-forward to reach Rancher internally (no external URL needed)
 kubectl port-forward -n cattle-system svc/rancher 8443:443 &>/dev/null &
 PF_PID=$!
 sleep 10
+
+# read actual bootstrap password from cluster secret (handles both fresh install and upgrade)
+ACTUAL_BOOTSTRAP=$(kubectl get secret --namespace cattle-system bootstrap-secret \
+  -o go-template='{{.data.bootstrapPassword|base64decode}}' 2>/dev/null \
+  || echo "${RANCHER_BOOTSTRAP_PASSWORD}")
 
 LOGIN_TOKEN=""
 for i in $(seq 1 20); do
   LOGIN_TOKEN=$(curl -sk -X POST \
     "https://localhost:8443/v3-public/localProviders/local?action=login" \
     -H "Content-Type: application/json" \
-    -d "{\"username\":\"admin\",\"password\":\"${RANCHER_BOOTSTRAP_PASSWORD}\"}" \
-    2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('token',''))" 2>/dev/null || true)
+    -d "{\"username\":\"admin\",\"password\":\"${ACTUAL_BOOTSTRAP}\"}" \
+    2>/dev/null \
+    | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('token',''))" 2>/dev/null \
+    || true)
   if [ -n "$LOGIN_TOKEN" ]; then
     echo "  Rancher API ready"
     break
@@ -96,19 +102,17 @@ if [ -n "$LOGIN_TOKEN" ]; then
     "https://localhost:8443/v3/users?action=changepassword" \
     -H "Authorization: Bearer ${LOGIN_TOKEN}" \
     -H "Content-Type: application/json" \
-    -d "{\"currentPassword\":\"${RANCHER_BOOTSTRAP_PASSWORD}\",\"newPassword\":\"${RANCHER_ADMIN_PASSWORD}\"}" \
+    -d "{\"currentPassword\":\"${ACTUAL_BOOTSTRAP}\",\"newPassword\":\"${RANCHER_ADMIN_PASSWORD}\"}" \
     >/dev/null
-
   curl -sk -X PUT \
     "https://localhost:8443/v3/settings/server-url" \
     -H "Authorization: Bearer ${LOGIN_TOKEN}" \
     -H "Content-Type: application/json" \
     -d "{\"value\":\"https://rancher.jeffriffle.com\"}" \
     >/dev/null
-
-  echo "==> Rancher admin credentials configured"
+  echo "==> Rancher admin credentials configured successfully"
 else
-  echo "WARNING: Could not configure Rancher credentials - do it manually"
+  echo "WARNING: Could not configure Rancher credentials - set manually"
 fi
 
 kill $PF_PID 2>/dev/null || true
